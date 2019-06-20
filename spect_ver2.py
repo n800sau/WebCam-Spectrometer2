@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
 
@@ -82,11 +83,13 @@ class Spect(QMainWindow,gui_spectver2.Ui_MainWindow):
         
         
         
-        self.vid_obj =''
 
 
     def startCapture(self):
         self.vid_obj = cv2.VideoCapture(0)
+	self.img = cv2.imread(sys.argv[1])
+	self.img = cv2.resize(self.img, (1024, 768))
+	return
         while not self.vid_obj:
             continue
         if self.vid_obj:
@@ -139,7 +142,8 @@ class Spect(QMainWindow,gui_spectver2.Ui_MainWindow):
        
        
     def updateImage(self):
-        t, frame = self.vid_obj.read()
+        #t, frame = self.vid_obj.read()
+	frame = self.img
         # transpose and convert color space
         frame = cv2.transpose(cv2.cvtColor(frame,cv2.cv.CV_RGB2BGR))
         
@@ -148,7 +152,7 @@ class Spect(QMainWindow,gui_spectver2.Ui_MainWindow):
             self.raw_image.setImage(image=frame)
             self.roiImage = frame[self.roiRect[0]:self.roiRect[1],self.roiRect[2]:self.roiRect[3],:]
             
-            #self.grabbed = frame ??
+            self.grabbed = frame
             self.cropped_image.setImage(image=self.roiImage, autolevels=True)
             
             raw = np.sum(self.roiImage,2)
